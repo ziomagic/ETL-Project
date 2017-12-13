@@ -1,12 +1,105 @@
-﻿<Window x:Class="ETL_Project.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ETL_Project"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+﻿<Window
+    x:Class="ETL_Project.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:ETL_Project"
+    mc:Ignorable="d"
+    Background="AliceBlue"
+    Title="ETL Project"
+    Height="350"
+    Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="20*" />
+            <RowDefinition
+                Height="9*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="76*" />
+            <ColumnDefinition
+                Width="368*" />
+            <ColumnDefinition
+                Width="73*" />
+        </Grid.ColumnDefinitions>
+        <TextBox
+            HorizontalAlignment="Stretch"
+            Height="23"
+            Margin="4,20,0,0"
+            TextWrapping="Wrap"
+            Text="{Binding Url}"
+            VerticalAlignment="Top"
+            Grid.Column="1" />
+        <Label
+            Content="Url:"
+            HorizontalAlignment="Left"
+            Margin="47,20,0,0"
+            VerticalAlignment="Top"
+            Height="23"
+            Width="28" />
+        <Button
+            Content="Extract"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Margin="17,10,0,0"
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            Width="75"
+            Height="20" />
+        <Button
+            Content="Transform"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Margin="149,10,0,0"
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            Width="75"
+            Height="20" />
+        <Button
+            Content="Load"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Margin="270,10,0,0"
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            Width="75"
+            Height="20" />
+        <Button
+            Content="ETL"
+            Command="{Binding EtlCommand}"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Margin="17,35,0,0"
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            Width="328"
+            Height="20" />
+        <ListView
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Height="160"
+            Margin="4,60,0,0"
+            VerticalAlignment="Top"
+            Width="354">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button
+            Content="Clear Database"
+            Command="{Binding ClearDbCommand}"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Margin="17,69,0,0"
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            Width="99" />
+
+
     </Grid>
 </Window>
