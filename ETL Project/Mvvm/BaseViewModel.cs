@@ -15,14 +15,26 @@ namespace ETL_Project.Mvvm
             [System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
         {
             field = value;
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected void SetProperty(ref int field, int value,
             [System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
         {
             field = value;
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected void SetProperty<T>(ref T field, T value,
+            [System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
+        {
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

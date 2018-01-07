@@ -94,9 +94,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Mvvm\RelayCommand.cs" />
     <Compile Include="Mvvm\BaseViewModel.cs" />
+    <Compile Include="Models\TransformedData.cs" />
     <Compile Include="Pipeline\LoadOperation.cs" />
+    <Compile Include="PreviewWindow.xaml.cs">
+      <DependentUpon>PreviewWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\DbManager.cs" />
+    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="ViewModel\PreviewWindowViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -110,6 +118,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PreviewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Review.cs" />

@@ -8,6 +8,7 @@ using System.Net.Http;
 using HtmlAgilityPack;
 using ETL_Project.Models;
 using System.Diagnostics;
+using ETL_Project.Utils;
 
 namespace ETL_Project.Pipeline
 {
@@ -15,8 +16,16 @@ namespace ETL_Project.Pipeline
     {
         public object HandleData(object input)
         {
+            Logger.Log("Starting transform operation.");
             var documents = input as List<HtmlDocument>;
-            var outputList = new List<Review>();
+            var output = new TransformedData()
+            {
+                Reviews = new List<Review>()
+            };
+            
+            output.Product = GetProduct(documents[0]);
+
+            documents.RemoveAt(0);
 
             foreach (var document in documents)
             {
@@ -24,17 +33,18 @@ namespace ETL_Project.Pipeline
                 if (reviewNodes == null)
                 {
                     Debug.WriteLine($"Url has no reviews.");
-                    return outputList;
+                    return output;
                 }
 
                 foreach (var node in reviewNodes)
                 {
                     var review = GetReviewFromNode(node);
-                    outputList.Add(review);
+                    review.ProductCode = output.Product.Code;
+                    output.Reviews.Add(review);
                 }
             }
 
-            return outputList;
+            return output;
         }
 
         private Review GetReviewFromNode(HtmlNode node)
@@ -99,6 +109,24 @@ namespace ETL_Project.Pipeline
 
             var votedNo = node.SelectSingleNode(".//*[contains(@class, 'vote-no')]");
             review.VoteNotUsefull = votedNo.GetAttributeValue("data-total-vote", 0);
+        }
+
+        private Product GetProduct(HtmlDocument doc)
+        {
+            var node = doc.DocumentNode;
+            var productName = node.SelectSingleNode("//*[@class='product-content']/h1").InnerHtml.Trim();
+
+            var code = productName.Substring(productName.LastIndexOf(' '));
+
+            var specs = doc.DocumentNode.SelectNodes("//*[@id='productTechSpecs']/div/table/tbody/tr/td/ul/li");
+
+            return new Product
+            {
+                Code = code,
+                Name = productName.Replace(code, ""),
+                Producer = specs[0].InnerText.Trim(),
+                Type = specs[1].InnerText.Trim(),
+            };
         }
     }
 }

@@ -12,6 +12,7 @@ namespace ETL_Project.Models
         [PrimaryKey]
         [AutoIncrement]
         public int Id { get; set; }
+        public string ProductCode { get; set; }
         public string Comment { get; set; }
         public string Author { get; set; }
         public bool Positive { get; set; }

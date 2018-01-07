@@ -26,20 +26,20 @@
                 Width="73*" />
         </Grid.ColumnDefinitions>
         <TextBox
-            HorizontalAlignment="Stretch"
+            HorizontalAlignment="Right"
             Height="23"
-            Margin="4,20,0,0"
+            Margin="0,20,0,0"
             TextWrapping="Wrap"
-            Text="{Binding Url}"
+            Text="{Binding ProductNumber}"
             VerticalAlignment="Top"
-            Grid.Column="1" />
+            Grid.Column="1" Width="299" />
         <Label
-            Content="Url:"
+            Content="Product number:"
             HorizontalAlignment="Left"
-            Margin="47,20,0,0"
+            Margin="32,20,0,0"
             VerticalAlignment="Top"
             Height="23"
-            Width="28" />
+            Width="108" Grid.ColumnSpan="2" />
         <Button
             Content="Extract"
             Grid.Column="1"
@@ -77,25 +77,23 @@
             VerticalAlignment="Top"
             Width="328"
             Height="20" />
-        <ListView
-            Grid.Column="1"
-            HorizontalAlignment="Left"
-            Height="160"
-            Margin="4,60,0,0"
-            VerticalAlignment="Top"
-            Width="354">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn />
-                </GridView>
-            </ListView.View>
-        </ListView>
         <Button
             Content="Clear Database"
             Command="{Binding ClearDbCommand}"
             Grid.Column="1"
             HorizontalAlignment="Left"
             Margin="17,69,0,0"
+            Grid.Row="1"
+            VerticalAlignment="Top"
+            Width="99" />
+        <ListBox 
+            ItemsSource="{Binding OutputList}" Grid.Column="1" HorizontalAlignment="Left" Height="134" Margin="0,68,0,0" VerticalAlignment="Top" Width="368"/>
+        <Button
+            Content="Preview"
+            Command="{Binding ShowPreviewCommand}"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Margin="246,69,0,0"
             Grid.Row="1"
             VerticalAlignment="Top"
             Width="99" />

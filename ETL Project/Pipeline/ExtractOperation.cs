@@ -7,6 +7,7 @@ using System.Web;
 using System.Net.Http;
 using HtmlAgilityPack;
 using System.Diagnostics;
+using ETL_Project.Utils;
 
 namespace ETL_Project.Pipeline
 {
@@ -18,16 +19,17 @@ namespace ETL_Project.Pipeline
         public object HandleData(object input)
         {
             var productId = input as string;
-            var urlStr = $"{CeneoUrl}/{productId}#tab=reviews";
 
-            var doc = new HtmlWeb();
-            var mainPageDoc = doc.Load(urlStr);
+            var reviewPage = GetHtmlDocumentById(productId);
+            var specPage = GetHtmlDocumentById(productId, "#tab=spec");
 
-            var reviewCount = GetReviewCount(mainPageDoc.DocumentNode);
-            var reviewsPerPage = GetReviewsPerPage(mainPageDoc.DocumentNode);
+            var reviewCount = GetReviewCount(reviewPage.DocumentNode);
+            var reviewsPerPage = GetReviewsPerPage(reviewPage.DocumentNode);
 
             var output = new List<HtmlDocument>();
-            output.Add(mainPageDoc);
+
+            output.Add(specPage);
+            output.Add(reviewPage);
 
             if (reviewCount > reviewsPerPage)
             {
@@ -35,11 +37,7 @@ namespace ETL_Project.Pipeline
 
                 for (int i = 2; i <= pagesCount; i++)
                 {
-                    var url = $"{CeneoUrl}/{productId}/opinie{i}";
-
-                    doc = new HtmlWeb();
-                    output.Add(doc.Load(url));
-                    Debug.WriteLine($"Parsing url: {url}");
+                    output.Add(GetHtmlDocumentById(productId, $"/opinie{i}"));
                 }
             }
 
@@ -61,6 +59,15 @@ namespace ETL_Project.Pipeline
         {
             var childNode = node.SelectNodes("//*[@class='review-box js_product-review']");
             return childNode.Count;
+        }
+
+        private HtmlDocument GetHtmlDocumentById(string productId, string tab = "#tab=reviews")
+        {
+            var urlStr = $"{CeneoUrl}/{productId}{tab}";
+            Logger.Log($"Parsing url: {urlStr}");
+            
+            var doc = new HtmlWeb();
+            return doc.Load(urlStr);
         }
     }
 }
