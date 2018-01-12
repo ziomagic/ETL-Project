@@ -4,8 +4,15 @@ using System.IO;
 
 namespace ETL_Project.Utils
 {
+    /// <summary>
+    /// Statyczna metoda odpowiedzialna za zarządzanie bazą dabnych
+    /// </summary>
     public static class DbManager
     {
+        /// <summary>
+        /// Zwraca połączenie do bazy danych
+        /// </summary>
+        /// <returns></returns>
         public static OrmLiteConnectionFactory GetDbFactory()
         {
             var databasePath = $"Data Source={GetDbPath()};";
@@ -20,6 +27,10 @@ namespace ETL_Project.Utils
             return dbFactory;
         }
 
+        /// <summary>
+        /// Metoda zwracająca ścieżkę do bazy danych
+        /// </summary>
+        /// <returns></returns>
         public static string GetDbPath()
         {
             return Directory.GetCurrentDirectory() + "\\etl.db";

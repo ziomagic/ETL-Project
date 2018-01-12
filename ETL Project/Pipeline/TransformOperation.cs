@@ -12,8 +12,16 @@ using ETL_Project.Utils;
 
 namespace ETL_Project.Pipeline
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za operacje transformacji danych
+    /// </summary>
     public class TransformOperation : IPipelineOperation
     {
+        /// <summary>
+        /// Metoda przekształcające dane
+        /// </summary>
+        /// <param name="input">Dane otrzymane z procesu Extract</param>
+        /// <returns></returns>
         public object HandleData(object input)
         {
             Logger.Log("Starting transform operation.");
@@ -47,6 +55,11 @@ namespace ETL_Project.Pipeline
             return output;
         }
 
+        /// <summary>
+        /// Metoda zwracająca obiekt "Review" z kodu HTML
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private Review GetReviewFromNode(HtmlNode node)
         {
             var review = new Review();
@@ -56,6 +69,11 @@ namespace ETL_Project.Pipeline
             return review;
         }
 
+        /// <summary>
+        /// Metoda uzupełniająca podstawowe informacje o recenzji z kodu HTML
+        /// </summary>
+        /// <param name="review"></param>
+        /// <param name="node"></param>
         private void ParseBaseInfo(Review review, HtmlNode node)
         {
             review.Author = node.SelectSingleNode(".//*[@class='reviewer-name-line']")?.InnerText.Trim();
@@ -77,6 +95,11 @@ namespace ETL_Project.Pipeline
             }
         }
 
+        /// <summary>
+        /// Metoda uzupełniająca informacje o plusach/minusach danego produktu z kodu HTML
+        /// </summary>
+        /// <param name="review"></param>
+        /// <param name="node"></param>
         private void ParseProsCons(Review review, HtmlNode node)
         {
             var nodeProsCons = node.SelectSingleNode(".//*[@class='product-review-pros-cons']");
@@ -102,6 +125,11 @@ namespace ETL_Project.Pipeline
             }
         }
 
+        /// <summary>
+        /// Metoda uzupełniajaca informacje o przydatności danej opini z kodu HTML
+        /// </summary>
+        /// <param name="review"></param>
+        /// <param name="node"></param>
         private void ParseUsefulness(Review review , HtmlNode node)
         {
             var votedYes = node.SelectSingleNode(".//*[contains(@class, 'vote-yes')]");
@@ -111,6 +139,11 @@ namespace ETL_Project.Pipeline
             review.VoteNotUsefull = votedNo.GetAttributeValue("data-total-vote", 0);
         }
 
+        /// <summary>
+        /// Metoda zwracająca informacje o produkcie z kodu HTML
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         private Product GetProduct(HtmlDocument doc)
         {
             var node = doc.DocumentNode;

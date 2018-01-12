@@ -5,8 +5,16 @@ using ETL_Project.Utils;
 
 namespace ETL_Project.Pipeline
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za zapisanie danych do bazy
+    /// </summary>
     public class LoadOperation : IPipelineOperation
     {
+        /// <summary>
+        /// Metoda odpowiedzialna za zapisanie danych do bazy
+        /// </summary>
+        /// <param name="input">Dane przetransformowane w kroku transformacji</param>
+        /// <returns></returns>
         public object HandleData(object input)
         {
             Logger.Log("Starting loading operation.");

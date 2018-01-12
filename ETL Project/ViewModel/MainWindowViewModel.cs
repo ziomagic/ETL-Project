@@ -15,6 +15,9 @@ using System.Windows.Threading;
 
 namespace ETL_Project.ViewModel
 {
+    /// <summary>
+    /// ViewModel głównego widoku aplikacji (część wzorca MVVM)
+    /// </summary>
     public class MainWindowViewModel : BindableBase
     {
         #region Fields
@@ -25,7 +28,9 @@ namespace ETL_Project.ViewModel
         private List<IPipelineOperation> _etlOperations;
         private object _cachedOperationResult;
         #endregion
-
+        /// <summary>
+        /// Domyślny konstruktor
+        /// </summary>
         public MainWindowViewModel() : base()
         {
             _extractOperation = new ExtractOperation();
@@ -49,12 +54,18 @@ namespace ETL_Project.ViewModel
 
         #region Properties
         private bool _canExtract = true;
+        /// <summary>
+        /// Właściwośc oreślająca czy krok wydobycia danych jest dostepny
+        /// </summary>
         public bool CanExtract
         {
             get { return _canExtract; }
             set { SetProperty(ref _canExtract, value); }
         }
 
+        /// <summary>
+        /// Właściwośc oreślająca czy krok transformacji danych jest dostepny
+        /// </summary>
         private bool _canTransform;
         public bool CanTransform
         {
@@ -63,6 +74,9 @@ namespace ETL_Project.ViewModel
         }
 
         private bool _canLoad;
+        /// <summary>
+        /// Właściwośc oreślająca czy krok wczytywania danych jest dostepny
+        /// </summary>
         public bool CanLoad
         {
             get { return _canLoad; }
@@ -70,6 +84,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _extractCommand;
+        /// <summary>
+        /// ExtractCommand - wykonanie operacji wydobycia danych
+        /// </summary>
         public ICommand ExtractCommand
         {
             get
@@ -103,6 +120,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _transformCommand;
+        /// <summary>
+        /// ExtractCommand - wykonanie operacji transformacji danych
+        /// </summary>
         public ICommand TransformCommand
         {
             get
@@ -132,6 +152,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _loadCommand;
+        /// <summary>
+        /// ExtractCommand - wykonanie operacji zapisania danych
+        /// </summary>
         public ICommand LoadCommand
         {
             get
@@ -157,6 +180,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _etlCommand;
+        /// <summary>
+        /// Wykonanie wszystkich kroków ETL
+        /// </summary>
         public ICommand EtlCommand
         {
             get
@@ -184,6 +210,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _clearDbCommand;
+        /// <summary>
+        /// Komenda wyczyszczenia bazy danych
+        /// </summary>
         public ICommand ClearDbCommand
         {
             get
@@ -201,6 +230,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _showPreviewCommand;
+        /// <summary>
+        /// Komenda pokazania okna detali
+        /// </summary>
         public ICommand ShowPreviewCommand
         {
             get
@@ -219,6 +251,9 @@ namespace ETL_Project.ViewModel
         }
 
         private string _productNumber = "30688215";
+        /// <summary>
+        /// Właściwość powiązana z wpisanym numerem produktu
+        /// </summary>
         public string ProductNumber
         {
             get { return _productNumber; }
@@ -234,6 +269,9 @@ namespace ETL_Project.ViewModel
         }
 
         private ObservableCollection<string> _outputList = new ObservableCollection<string>();
+        /// <summary>
+        /// Właściwośc powiązana z listą kroków przeprowadzonych przez program
+        /// </summary>
         public ObservableCollection<string> OutputList
         {
             get { return _outputList; }
@@ -245,6 +283,10 @@ namespace ETL_Project.ViewModel
         #endregion
 
         #region Methods [private/protected]
+        /// <summary>
+        /// Metoda wykonująca wszystkie kroki ETL
+        /// </summary>
+        /// <param name="input"></param>
         private void ExecuteEtl(object input)
         {
             try
@@ -260,11 +302,19 @@ namespace ETL_Project.ViewModel
             }
         }
 
+        /// <summary>
+        /// Metoda sprawdzająca czy numer produktu jest poprawny
+        /// </summary>
+        /// <param name="prodNumber"></param>
+        /// <returns></returns>
         private bool ValidateProductNumber(string prodNumber)
         {
             return int.TryParse(prodNumber, out int result);
         }
 
+        /// <summary>
+        /// Metoda usuwająca baze danych
+        /// </summary>
         private void ClearDb()
         {
             var path = DbManager.GetDbPath();

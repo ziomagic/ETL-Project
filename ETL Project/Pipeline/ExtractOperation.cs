@@ -12,11 +12,19 @@ using System.Windows;
 
 namespace ETL_Project.Pipeline
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za operację wydobycia danych
+    /// </summary>
     public class ExtractOperation : IPipelineOperation
     {
         public const int AsyncRequestCount = 5;
         public const string CeneoUrl = "https://www.ceneo.pl";
 
+        /// <summary>
+        /// Metoda wydobywająca dane z podanego numeru produktu
+        /// </summary>
+        /// <param name="input">Numer produktu</param>
+        /// <returns></returns>
         public object HandleData(object input)
         {
             var productId = input as string;
@@ -49,6 +57,11 @@ namespace ETL_Project.Pipeline
             return output;
         }
 
+        /// <summary>
+        /// Metoda zwracająca ilośc wszystkich opini (z kodu HTML)
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private int GetReviewCount(HtmlNode node)
         {
             var childNode = node.SelectSingleNode("//span[@itemprop='reviewCount']");
@@ -60,12 +73,23 @@ namespace ETL_Project.Pipeline
             return int.Parse(childNode.InnerText.Trim());
         }
 
+        /// <summary>
+        /// Metoda zwracająca ilośc opini na stronę (z kodu HTML)
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private int GetReviewsPerPage(HtmlNode node)
         {
             var childNode = node.SelectNodes("//*[@class='review-box js_product-review']");
             return childNode.Count;
         }
 
+        /// <summary>
+        /// Metoda pobierająca dokument HTML
+        /// </summary>
+        /// <param name="productId">Numer produktu</param>
+        /// <param name="tab">Zakładka</param>
+        /// <returns></returns>
         private HtmlDocument GetHtmlDocumentById(string productId, string tab = "#tab=reviews")
         {
             var urlStr = $"{CeneoUrl}/{productId}{tab}";

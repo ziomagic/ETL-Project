@@ -83,6 +83,9 @@ namespace ETL_Project.ViewModel
         #endregion
 
         #region Methods [private]
+        /// <summary>
+        /// Metoda wczytująca recenzję z bazy danych
+        /// </summary>
         private void LoadReviews()
         {
             var dbFactory = DbManager.GetDbFactory();

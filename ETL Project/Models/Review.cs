@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ETL_Project.Models
 {
+    /// <summary>
+    /// Model recenzji
+    /// </summary>
     public class Review
     {
         [PrimaryKey]
