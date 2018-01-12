@@ -8,6 +8,7 @@ using System.Net.Http;
 using HtmlAgilityPack;
 using System.Diagnostics;
 using ETL_Project.Utils;
+using System.Windows;
 
 namespace ETL_Project.Pipeline
 {
@@ -24,6 +25,10 @@ namespace ETL_Project.Pipeline
             var specPage = GetHtmlDocumentById(productId, "#tab=spec");
 
             var reviewCount = GetReviewCount(reviewPage.DocumentNode);
+            if(reviewCount == 0)
+            {
+                throw new KeyNotFoundException();
+            }
             var reviewsPerPage = GetReviewsPerPage(reviewPage.DocumentNode);
 
             var output = new List<HtmlDocument>();
@@ -37,7 +42,7 @@ namespace ETL_Project.Pipeline
 
                 for (int i = 2; i <= pagesCount; i++)
                 {
-                    output.Add(GetHtmlDocumentById(productId, $"/opinie{i}"));
+                    output.Add(GetHtmlDocumentById(productId, $"/opinie-{i}"));
                 }
             }
 

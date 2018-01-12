@@ -6,12 +6,15 @@ using System.Collections.ObjectModel;
 using ServiceStack.OrmLite;
 using System.Windows;
 using System.Windows.Input;
+using System.IO;
 
 namespace ETL_Project.ViewModel
 {
     public class PreviewWindowViewModel : BindableBase
     {
         #region Fields
+        private const string ReviewFilePath = "reviews.csv";
+        private const string ReviewsDirectory = "reviews/";
         #endregion
 
         public PreviewWindowViewModel() : base()
@@ -39,7 +42,15 @@ namespace ETL_Project.ViewModel
                 {
                     _saveToCsvCommand = new RelayCommand(async () =>
                     {
-                        // Save to csv
+                        using (var reader = File.CreateText(ReviewFilePath))
+                        {
+                            using (var csv = new CsvHelper.CsvWriter(reader))
+                            {
+                                csv.WriteRecords<Review>(Reviews);
+                                
+                            }
+                        }
+                        MessageBox.Show("Reviews saved to " + ReviewFilePath);
                     });
                 }
 
@@ -48,15 +59,21 @@ namespace ETL_Project.ViewModel
         }
 
         private ICommand _saveToSeparateFileCommand;
-        public ICommand SaveToSeparateFileCommand
+        public ICommand SaveToFilesCommand
         {
             get
             {
                 if (_saveToSeparateFileCommand == null)
                 {
-                    _saveToSeparateFileCommand = new RelayCommand(async () =>
+                    _saveToSeparateFileCommand = new RelayCommand(() =>
                     {
-                        // Save to csv
+                        Directory.CreateDirectory(ReviewsDirectory);
+                        var i = 0;
+                        foreach (var review in Reviews)
+                        {
+                            File.WriteAllText($"{ReviewsDirectory}_{i++}_{review.Author}.txt", review.Comment);
+                        }
+                        MessageBox.Show("Reviews saved to directory " + ReviewsDirectory);
                     });
                 }
 

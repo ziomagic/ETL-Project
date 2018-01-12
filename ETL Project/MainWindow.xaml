@@ -42,6 +42,8 @@
             Width="108" Grid.ColumnSpan="2" />
         <Button
             Content="Extract"
+            Command="{Binding ExtractCommand}"
+            IsEnabled="{Binding CanExtract}"
             Grid.Column="1"
             HorizontalAlignment="Left"
             Margin="17,10,0,0"
@@ -51,6 +53,8 @@
             Height="20" />
         <Button
             Content="Transform"
+            Command="{Binding TransformCommand}"
+            IsEnabled="{Binding CanTransform}"
             Grid.Column="1"
             HorizontalAlignment="Left"
             Margin="149,10,0,0"
@@ -60,6 +64,8 @@
             Height="20" />
         <Button
             Content="Load"
+            Command="{Binding LoadCommand}"
+            IsEnabled="{Binding CanLoad}"
             Grid.Column="1"
             HorizontalAlignment="Left"
             Margin="270,10,0,0"
@@ -70,6 +76,7 @@
         <Button
             Content="ETL"
             Command="{Binding EtlCommand}"
+                        IsEnabled="{Binding CanExtract}"
             Grid.Column="1"
             HorizontalAlignment="Left"
             Margin="17,35,0,0"

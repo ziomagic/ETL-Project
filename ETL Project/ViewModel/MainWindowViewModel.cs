@@ -23,6 +23,7 @@ namespace ETL_Project.ViewModel
         private IPipelineOperation _loadOperation;
 
         private List<IPipelineOperation> _etlOperations;
+        private object _cachedOperationResult;
         #endregion
 
         public MainWindowViewModel() : base()
@@ -47,6 +48,114 @@ namespace ETL_Project.ViewModel
         }
 
         #region Properties
+        private bool _canExtract = true;
+        public bool CanExtract
+        {
+            get { return _canExtract; }
+            set { SetProperty(ref _canExtract, value); }
+        }
+
+        private bool _canTransform;
+        public bool CanTransform
+        {
+            get { return _canTransform; }
+            set { SetProperty(ref _canTransform, value); }
+        }
+
+        private bool _canLoad;
+        public bool CanLoad
+        {
+            get { return _canLoad; }
+            set { SetProperty(ref _canLoad, value); }
+        }
+
+        private ICommand _extractCommand;
+        public ICommand ExtractCommand
+        {
+            get
+            {
+                if (_extractCommand == null)
+                {
+                    _extractCommand = new RelayCommand(async () =>
+                    {
+                        if (!ValidateProductNumber(ProductNumber))
+                        {
+                            MessageBox.Show("Please provide product number.");
+                            return;
+                        }
+
+                        CanExtract = false;
+                        var dispatcher = Application.Current.Dispatcher;
+                        await Task.Run(() =>
+                        {
+                            _cachedOperationResult = _extractOperation.HandleData(ProductNumber);
+                            dispatcher.Invoke(() =>
+                            {
+                                CanExtract = true;
+                                CanTransform = true;
+                            });
+                        });
+                    });
+                }
+
+                return _extractCommand;
+            }
+        }
+
+        private ICommand _transformCommand;
+        public ICommand TransformCommand
+        {
+            get
+            {
+                if (_transformCommand == null)
+                {
+                    _transformCommand = new RelayCommand(async () =>
+                    {
+                        CanTransform = false;
+                        CanExtract = false;
+                        CanTransform = false;
+                        var dispatcher = Application.Current.Dispatcher;
+                        await Task.Run(() =>
+                        {
+                            _cachedOperationResult = _transformOperation.HandleData(_cachedOperationResult);
+                            dispatcher.Invoke(() =>
+                            {
+                                CanLoad = true;
+                                CanExtract = true;
+                            });
+                        });
+                    });
+                }
+
+                return _transformCommand;
+            }
+        }
+
+        private ICommand _loadCommand;
+        public ICommand LoadCommand
+        {
+            get
+            {
+                if (_loadCommand == null)
+                {
+                    _loadCommand = new RelayCommand(async () =>
+                    {
+                        CanLoad = false;
+                        CanExtract = false;
+                        CanTransform = false;
+                        var dispatcher = Application.Current.Dispatcher;
+                        await Task.Run(() =>
+                        {
+                            _cachedOperationResult = _loadOperation.HandleData(_cachedOperationResult);
+                            dispatcher.Invoke(() => CanExtract = true);
+                        });
+                    });
+                }
+
+                return _loadCommand;
+            }
+        }
+
         private ICommand _etlCommand;
         public ICommand EtlCommand
         {
@@ -62,7 +171,11 @@ namespace ETL_Project.ViewModel
                             return;
                         }
 
+                        CanTransform = false;
+                        CanLoad = false;
+                        CanExtract = false;
                         await Task.Run(() => ExecuteEtl(ProductNumber));
+                        CanExtract = true;
                     });
                 }
 
@@ -134,9 +247,16 @@ namespace ETL_Project.ViewModel
         #region Methods [private/protected]
         private void ExecuteEtl(object input)
         {
-            foreach (var operation in _etlOperations)
+            try
             {
-                input = operation.HandleData(input);
+                foreach (var operation in _etlOperations)
+                {
+                    input = operation.HandleData(input);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can no parse this request.");
             }
         }
 
